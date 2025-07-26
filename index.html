@@ -2,58 +2,91 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>WeedWilly</title>
+  <title>WeedWilly | 技術作品展示</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Noto Sans TC', sans-serif; background: #fff; color: #333; }
-    header, footer { text-align: center; padding: 2rem; background: #f0f0f0; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      margin: 0; padding: 0;
+      background: #fafafa; color: #333;
+    }
+    header, footer {
+      background: #222; color: #fff;
+      padding: 2rem; text-align: center;
+    }
     h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    p.subtext { color: #666; }
-    main { max-width: 900px; margin: auto; padding: 2rem 1.5rem; }
-    section { margin-bottom: 2rem; }
-    h2 { font-size: 1.4rem; margin-bottom: 1rem; }
-    .grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-    .card { background: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.05); }
-    .card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    p.subtext { font-size: 0.9rem; color: #ccc; }
+    main { max-width: 960px; margin: auto; padding: 2rem 1.5rem; }
+    section { margin-bottom: 2.5rem; }
+    h2 { font-size: 1.6rem; margin-bottom: 1rem; color: #007acc; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      padding: 1.2rem 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
     .card p { font-size: 0.9rem; color: #555; }
-    .card a { display: inline-block; margin-top: 0.5rem; text-decoration: none; color: #007acc; }
-    .card a:hover { text-decoration: underline; }
-    footer { font-size: 0.8rem; color: #777; }
+    .card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      color: #007acc;
+    }
+
+    footer { font-size: 0.8rem; color: #999; }
   </style>
 </head>
 <body>
   <header>
     <h1>WeedWilly</h1>
-    <p class="subtext">專注開發 | 技術研究 | 程式自動化</p>
+    <p class="subtext">Code. Automate. Interface. Repeat.</p>
   </header>
 
   <main>
     <section>
-      <h2>🧪 我的作品</h2>
+      <h2>🧪 技術專案展示</h2>
       <div class="grid">
         <div class="card">
-          <h3>Selenium 自動化工具</h3>
-          <p>使用 Python + Selenium 快速處理網頁登入與資料擷取。</p>
-          <a href="#">查看項目</a>
+          <h3>🔐 自動登入工具</h3>
+          <p>Selenium 控制 Chrome，實現帳號登入流程模擬。</p>
+          <a href="#">演示說明</a>
         </div>
         <div class="card">
-          <h3>PyQt5 GUI App</h3>
-          <p>桌面應用程式介面設計，整合操作與後端邏輯。</p>
-          <a href="#">查看介面展示</a>
+          <h3>🖥️ PyQt5 GUI 展示</h3>
+          <p>桌面介面設計，整合前端操作與資料擷取。</p>
+          <a href="#">操作流程</a>
         </div>
         <div class="card">
-          <h3>Web 工具整合</h3>
-          <p>自建工作流程與自動化介面，提升使用效率。</p>
-          <a href="#">查看說明</a>
+          <h3>⚙️ 結構化流程控制</h3>
+          <p>以模組化方式控制不同自動化任務。</p>
+          <a href="#">源碼細節</a>
+        </div>
+        <div class="card">
+          <h3>📦 網頁元件處理</h3>
+          <p>動態元素偵測、彈窗排除、錯誤處理模組。</p>
+          <a href="#">案例展示</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    ⛅ 2025 WeedWilly | Powered by GitHub Pages
+    ⛅ 2025 WeedWilly | 技術展示頁 Powered by GitHub Pages
   </footer>
 </body>
 </html>

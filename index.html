@@ -1,98 +1,631 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <title>WeedWilly Lab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background-color: #f5f5f5;
-      margin: 0; padding: 0;
-      color: #333;
-    }
-    header {
-      background: #007acc; color: white;
-      padding: 2rem; text-align: center;
-    }
-    header h1 { margin: 0; font-size: 2rem; }
-    nav {
-      background: #e0e0e0;
-      text-align: center;
-      padding: 1rem;
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      color: #007acc;
-      font-weight: 600;
-    }
-    main {
-      max-width: 1000px;
-      margin: auto;
-      padding: 2rem 1.5rem;
-      background: white;
-    }
-    section { margin-bottom: 2.5rem; }
-    h2 { color: #007acc; font-size: 1.4rem; margin-bottom: 1rem; }
-    p { line-height: 1.6; }
-    footer {
-      background: #f0f0f0;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.8rem;
-      color: #666;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeedWilly - 探索自然的奧秘</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2d5a27;
+            --secondary-color: #4a7c59;
+            --accent-color: #8fbc8f;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #4a7c59;
+            --secondary-color: #6b8e6b;
+            --accent-color: #a4d4a4;
+            --text-color: #e0e0e0;
+            --bg-color: #1a1a1a;
+            --card-bg: rgba(40, 40, 40, 0.9);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* 背景動畫 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #2d5a27, #4a7c59, #6b8e6b);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 導航欄 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🌿";
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* 主要內容 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            animation: slideUp 1s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 浮動元素 */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .leaf {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .leaf:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .leaf:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .leaf:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .leaf:nth-child(4) { top: 40%; right: 30%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* 特色區塊 */
+        .features {
+            padding: 5rem 0;
+            background: var(--bg-color);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        /* 關於區塊 */
+        .about {
+            padding: 5rem 0;
+            background: var(--card-bg);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 400px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 聯絡區塊 */
+        .contact {
+            padding: 5rem 0;
+            background: var(--bg-color);
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(45, 90, 39, 0.3);
+        }
+
+        .contact-form button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* 載入動畫 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--accent-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>WeedWilly Lab</h1>
-    <p>For learning</p>
-  </header>
+    <!-- 載入畫面 -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
 
-  <nav>
-    <a href="#about">關於我</a>
-    <a href="#projects">作品</a>
-    <a href="#research">研究方向</a>
-    <a href="#contact">聯絡</a>
-  </nav>
+    <!-- 背景動畫 -->
+    <div class="bg-animation"></div>
 
-  <main>
-    <section id="about">
-      <h2>關於我</h2>
-      <p>我熱衷於開發以 Python 為核心的桌面應用程式，整合 Selenium 自動化與 PyQt5 視覺介面，提升工作效率與操作直覺。</p>
+    <!-- 導航欄 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">WeedWilly</a>
+            <ul class="nav-links">
+                <li><a href="#home">首頁</a></li>
+                <li><a href="#features">特色</a></li>
+                <li><a href="#about">關於</a></li>
+                <li><a href="#contact">聯絡</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle">🌙 深色模式</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="floating-elements">
+            <div class="leaf">🌿</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🌱</div>
+            <div class="leaf">🌿</div>
+        </div>
+        <div class="hero-content">
+            <h1>歡迎來到 WeedWilly</h1>
+            <p>探索自然的奧秘，發現綠色世界的無限可能</p>
+            <a href="#features" class="cta-button">開始探索</a>
+        </div>
     </section>
 
-    <section id="projects">
-      <h2>作品集</h2>
-      <p>目前專注開發以下幾項工具：</p>
-      <ul>
-        <li>自動登入模組（Selenium）</li>
-        <li>GUI + Web 自動化整合程式</li>
-        <li>任務流程模組化平台</li>
-      </ul>
+    <!-- 特色區塊 -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>我們的特色</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🌱</span>
+                    <h3>自然成長</h3>
+                    <p>專注於自然、有機的生長方式，尊重每一個生命的自然節奏</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔬</span>
+                    <h3>科學研究</h3>
+                    <p>結合現代科學技術，深入研究植物的生長規律和特性</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🌍</span>
+                    <h3>環保理念</h3>
+                    <p>致力於環境保護，推廣可持續發展的綠色生活方式</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="research">
-      <h2>研究興趣</h2>
-      <p>探索自動化與人機互動的整合應用，包括：</p>
-      <ul>
-        <li>Web 元件偵測與反應式控制</li>
-        <li>GUI 與後端同步架構設計</li>
-        <li>流程優化與排程演算法</li>
-      </ul>
+    <!-- 關於區塊 -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>關於 WeedWilly</h2>
+                    <p>WeedWilly 是一個專注於植物研究和自然探索的平台。我們相信每一株植物都有其獨特的價值和美麗，致力於通過科學的方法來理解和欣賞自然世界。</p>
+                    <p>我們的團隊由熱愛自然的研究者組成，運用現代技術和傳統智慧，為大家帶來最真實、最有用的植物知識。</p>
+                    <a href="#contact" class="cta-button">了解更多</a>
+                </div>
+                <div class="about-image">
+                    🌿
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="contact">
-      <h2>聯絡方式</h2>
-      <p>歡迎合作或交流技術，請透過 <a href="mailto:weedwilly@example.com">weedwilly@example.com</a> 聯繫我。</p>
+    <!-- 聯絡區塊 -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>聯絡我們</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="您的姓名" required>
+                <input type="email" placeholder="您的郵箱" required>
+                <textarea rows="5" placeholder="您的訊息" required></textarea>
+                <button type="submit">發送訊息</button>
+            </form>
+        </div>
     </section>
-  </main>
 
-  <footer>
-    ⛅ 2025 WeedWilly | Powered by GitHub Pages
-  </footer>
+    <script>
+        // 載入動畫
+        window.addEventListener('load', () => {
+            const loading = document.getElementById('loading');
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1000);
+        });
+
+        // 主題切換
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙 深色模式';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️ 淺色模式';
+            }
+        });
+
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 導航欄滾動效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(248, 249, 250, 0.95)';
+                navbar.style.backdropFilter = 'blur(20px)';
+            } else {
+                navbar.style.background = 'var(--card-bg)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            }
+        });
+
+        // 表單提交
+        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('感謝您的訊息！我們會盡快回覆您。');
+            e.target.reset();
+        });
+
+        // 視差滾動效果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.bg-animation');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+
+        // 卡片懸停效果增強
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-15px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // 文字打字效果
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // 當頁面載入完成後啟動打字效果
+        setTimeout(() => {
+            const heroTitle = document.querySelector('.hero h1');
+            const originalText = heroTitle.textContent;
+            typeWriter(heroTitle, originalText, 150);
+        }, 1500);
+    </script>
 </body>
 </html>

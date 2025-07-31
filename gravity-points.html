@@ -9,6 +9,12 @@
       overflow: hidden;
       background-color: #222;
       user-select: none;
+      font-family: Helvetica, sans-serif;
+      padding: 0;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -o-user-select: none;
+      -ms-user-select: none;
     }
     canvas {
       position: absolute;
@@ -23,46 +29,42 @@
       color: #eee;
       font-size: 13px;
       background-color: rgba(0, 0, 0, .5);
+      z-index: 10;
+    }
+    .controls {
+      position: absolute;
+      top: 40px;
+      left: 10px;
+      color: #eee;
+      font-size: 12px;
+      z-index: 10;
+    }
+    .controls input, .controls button {
+      margin: 5px 0;
+      padding: 3px 8px;
     }
   </style>
 </head>
 <body>
   <canvas id="c"></canvas>
-  <div class="info">Click to add gravity point.</div>
-  <script src="gravity-points.js"></script>
-</body>
+  <div class="info">Click to add gravity point. Double-click to collapse.</div>
+  <div class="controls">
+    <div>
+      <label>Particles: </label>
+      <input type="range" id="particleSlider" min="0" max="500" value="100">
+      <span id="particleCount">100</span>
+    </div>
+    <div>
+      <label>
+        <input type="checkbox" id="interferenceCheck" checked>
+        Interference Between Points
+      </label>
+    </div>
+  </div>
 
-body {
-    font-family: Helvetica sans-serif;
-    padding: 0;
-    margin: 0;
-    background-color: #222;
-    overflow: hidden;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-         -o-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-}
-
-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.info {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 5px 15px;
-    color: #eee;
-    font-size: 13px;
-    background-color: rgba(0, 0, 0, .5);
-}
-
+  <script>
 /**
- * requestAnimationFrame
+ * requestAnimationFrame polyfill
  */
 window.requestAnimationFrame = (function(){
     return  window.requestAnimationFrame       ||
@@ -75,9 +77,8 @@ window.requestAnimationFrame = (function(){
             };
 })();
 
-
 /**
- * Vector
+ * Vector class
  */
 function Vector(x, y) {
     this.x = x || 0;
@@ -186,9 +187,8 @@ Vector.prototype = {
     }
 };
 
-
 /**
- * GravityPoint
+ * GravityPoint class
  */
 function GravityPoint(x, y, radius, targets) {
     Vector.call(this, x, y);
@@ -329,9 +329,8 @@ GravityPoint.prototype = (function(o) {
     }
 });
 
-
 /**
- * Particle
+ * Particle class
  */
 function Particle(x, y, radius) {
     Vector.call(this, x, y);
@@ -356,56 +355,31 @@ Particle.prototype = (function(o) {
         this._latest.set(this);
         this.add(this._speed);
     }
-
-    // render: function(ctx) {
-    //     if (this._speed.length() > 12) this._speed.normalize().scale(12);
-
-    //     this._latest.set(this);
-    //     this.add(this._speed);
-
-    //     ctx.save();
-    //     ctx.fillStyle = ctx.strokeStyle = '#fff';
-    //     ctx.lineCap = ctx.lineJoin = 'round';
-    //     ctx.lineWidth = this.radius * 2;
-    //     ctx.beginPath();
-    //     ctx.moveTo(this.x, this.y);
-    //     ctx.lineTo(this._latest.x, this._latest.y);
-    //     ctx.stroke();
-    //     ctx.beginPath();
-    //     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    //     ctx.fill();
-    //     ctx.restore();
-    // }
 });
 
-
-
-// Initialize
-
+// Main application
 (function() {
-
-    // Configs
-
+    // Configuration
     var BACKGROUND_COLOR      = 'rgba(11, 51, 56, 1)',
         PARTICLE_RADIUS       = 1,
         G_POINT_RADIUS        = 10,
         G_POINT_RADIUS_LIMITS = 65;
 
-
-    // Vars
-
+    // Variables
     var canvas, context,
         bufferCvs, bufferCtx,
         screenWidth, screenHeight,
         mouse = new Vector(),
         gravities = [],
         particles = [],
-        grad,
-        gui, control;
+        grad;
 
+    // Control elements
+    var particleSlider = document.getElementById('particleSlider');
+    var particleCount = document.getElementById('particleCount');
+    var interferenceCheck = document.getElementById('interferenceCheck');
 
     // Event Listeners
-
     function resize(e) {
         screenWidth  = canvas.width  = window.innerWidth;
         screenHeight = canvas.height = window.innerHeight;
@@ -468,9 +442,7 @@ Particle.prototype = (function(o) {
         }
     }
 
-
     // Functions
-
     function addParticle(num) {
         var i, p;
         for (i = 0; i < num; i++) {
@@ -491,46 +463,38 @@ Particle.prototype = (function(o) {
         }
     }
 
+    // Control event listeners
+    particleSlider.addEventListener('input', function() {
+        var newNum = parseInt(this.value);
+        var diff = newNum - particles.length;
+        particleCount.textContent = newNum;
+        
+        if (diff > 0) {
+            addParticle(diff);
+        } else if (diff < 0) {
+            removeParticle(-diff);
+        }
+    });
 
-    // GUI Control
+    interferenceCheck.addEventListener('change', function() {
+        GravityPoint.interferenceToPoint = this.checked;
+    });
 
-    control = {
-        particleNum: 100
-    };
-
-
-    // Init
-
-    canvas  = document.getElementById('c');
+    // Initialize
+    canvas = document.getElementById('c');
     bufferCvs = document.createElement('canvas');
 
     window.addEventListener('resize', resize, false);
     resize(null);
 
-    addParticle(control.particleNum);
+    addParticle(100);
 
     canvas.addEventListener('mousemove', mouseMove, false);
     canvas.addEventListener('mousedown', mouseDown, false);
     canvas.addEventListener('mouseup', mouseUp, false);
     canvas.addEventListener('dblclick', doubleClick, false);
 
-
-    // GUI
-
-    gui = new dat.GUI();
-    gui.add(control, 'particleNum', 0, 500).step(1).name('Particle Num').onChange(function() {
-        var n = (control.particleNum | 0) - particles.length;
-        if (n > 0)
-            addParticle(n);
-        else if (n < 0)
-            removeParticle(-n);
-    });
-    gui.add(GravityPoint, 'interferenceToPoint').name('Interference Between Point');
-    gui.close();
-
-
-    // Start Update
-
+    // Animation loop
     var loop = function() {
         var i, len, g, p;
 
@@ -558,10 +522,6 @@ Particle.prototype = (function(o) {
         bufferCtx.fillRect(0, 0, screenWidth, screenHeight);
         bufferCtx.restore();
 
-        // パーティクルをバッファに描画
-        // for (i = 0, len = particles.length; i < len; i++) {
-        //     particles[i].render(bufferCtx);
-        // }
         len = particles.length;
         bufferCtx.save();
         bufferCtx.fillStyle = bufferCtx.strokeStyle = '#fff';
@@ -584,14 +544,13 @@ Particle.prototype = (function(o) {
         bufferCtx.fill();
         bufferCtx.restore();
 
-        // バッファをキャンバスに描画
         context.drawImage(bufferCvs, 0, 0);
 
         requestAnimationFrame(loop);
     };
+    
     loop();
-
 })();
-
-  
+  </script>
+</body>
 </html>

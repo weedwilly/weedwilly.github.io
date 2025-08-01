@@ -91,7 +91,7 @@ body {
         }
 
         .logo::before {
-            content: "🌿";
+            content:"💊";
             font-size: 1.5rem;
         }
 
@@ -222,17 +222,17 @@ body {
             pointer-events: none;
         }
 
-        .leaf {
+        .molecule {
             position: absolute;
             font-size: 2rem;
             opacity: 0.3;
             animation: float 6s ease-in-out infinite;
         }
 
-        .leaf:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-        .leaf:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
-        .leaf:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
-        .leaf:nth-child(4) { top: 40%; right: 30%; animation-delay: 1s; }
+        .:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .molecule:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .molecule:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .molecule:nth-child(4) { top: 40%; right: 30%; animation-delay: 1s; }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }

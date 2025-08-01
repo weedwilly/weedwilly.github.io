@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeedWilly - 探索自然的奧秘</title>
+    <title>WeedWilly - 可悲考研仔</title>
     <style>
         * {
             margin: 0;
@@ -11,53 +11,53 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-color: #2d5a27;
-            --secondary-color: #4a7c59;
-            --accent-color: #8fbc8f;
-            --text-color: #333;
-            --bg-color: #f8f9fa;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
+     :root {
+    --primary-color: #145DA0;
+    --secondary-color: #0C2D48;
+    --accent-color: #2E8BC0;
+    --text-color: #1b2733;
+    --bg-color: #f4f8fb;
+    --card-bg: rgba(255,255,255,0.93);
+    --shadow: 0 10px 32px rgba(44,79,123, 0.10);
+}
 
-        [data-theme="dark"] {
-            --primary-color: #4a7c59;
-            --secondary-color: #6b8e6b;
-            --accent-color: #a4d4a4;
-            --text-color: #e0e0e0;
-            --bg-color: #1a1a1a;
-            --card-bg: rgba(40, 40, 40, 0.9);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
+[data-theme="dark"] {
+    --primary-color: #2E8BC0;
+    --secondary-color: #145DA0;
+    --accent-color: #4f92c6;
+    --text-color: #e0e6ee;
+    --bg-color: #111922;
+    --card-bg: rgba(30,40,60,0.96);
+    --shadow: 0 10px 32px rgba(44,79,123,0.25);
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background: var(--bg-color);
-            transition: all 0.3s ease;
-            overflow-x: hidden;
-        }
-
-        /* 背景動畫 */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(45deg, #2d5a27, #4a7c59, #6b8e6b);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+body {
+    font-family: "Roboto", "Noto Sans TC", Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+.logo::before {
+    content: "⚗️";
+    font-size: 1.3rem;
+}
+.cta-button {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    color: #fff;
+}
+.feature-icon { font-size: 2.2rem; }
+.features h2, .blog h2, .about-text h2, .contact h2 {
+    color: var(--primary-color);
+}
+.floating-elements .molecule {
+    font-size: 2.1rem;
+    opacity: 0.24;
+    animation: float2 7s ease-in-out infinite;
+}
+@keyframes float2 {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-22px) scale(1.07);}
+}
+/* 調整其他區塊顏色、陰影，以及 button hover 效果即可 */
 
         /* 導航欄 */
         .navbar {
@@ -450,72 +450,100 @@
     <!-- 導航欄 -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">WeedWilly</a>
-            <ul class="nav-links">
-                <li><a href="#home">首頁</a></li>
-                <li><a href="#features">特色</a></li>
-                <li><a href="#about">關於</a></li>
-                <li><a href="#contact">聯絡</a></li>
-            </ul>
+            <a href="#" class="logo">BioPharmLab</a>
+<!-- 👆LOGO前可加：⚗️ or 💊 or ⚛️ -->
+<!-- nav-links 如： -->
+<ul class="nav-links">
+    <li><a href="#home">首頁</a></li>
+    <li><a href="#research">研究領域</a></li>
+    <li><a href="#publications">最新成果</a></li>
+    <li><a href="#about">團隊</a></li>
+    <li><a href="#contact">聯絡</a></li>
+</ul>
+
             <button class="theme-toggle" id="themeToggle">🌙 深色模式</button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="floating-elements">
-            <div class="leaf">🌿</div>
-            <div class="leaf">🍃</div>
-            <div class="leaf">🌱</div>
-            <div class="leaf">🌿</div>
-        </div>
-        <div class="hero-content">
-            <h1>歡迎來到 WeedWilly</h1>
-            <p>探索自然的奧秘，發現綠色世界的無限可能</p>
-            <a href="#features" class="cta-button">開始探索</a>
-        </div>
-    </section>
+   <section class="hero" id="home">
+    <div class="hero-content">
+        <h1>歡迎來到 BioPharmLab</h1>
+        <p>專注藥學創新與生物化工研究，推動健康新未來</p>
+        <a href="#research" class="cta-button">探索研究領域</a>
+    </div>
+    <div class="floating-elements">
+        <div class="molecule">⚛️</div>
+        <div class="molecule">🔬</div>
+        <div class="molecule">💊</div>
+        <div class="molecule">🧬</div>
+    </div>
+</section>
+
 
     <!-- 特色區塊 -->
-    <section class="features" id="features">
-        <div class="container">
-            <h2>我們的特色</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🌱</span>
-                    <h3>自然成長</h3>
-                    <p>專注於自然、有機的生長方式，尊重每一個生命的自然節奏</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">🔬</span>
-                    <h3>科學研究</h3>
-                    <p>結合現代科學技術，深入研究植物的生長規律和特性</p>
-                </div>
-                <div class="feature-card">
-                    <span class="feature-icon">🌍</span>
-                    <h3>環保理念</h3>
-                    <p>致力於環境保護，推廣可持續發展的綠色生活方式</p>
-                </div>
+  <section class="features" id="research">
+    <div class="container">
+        <h2>研究領域</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">💊</span>
+                <h3>新藥研發</h3>
+                <p>開發創新藥物與優化劑型，提升治療效果與安全性。</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🧬</span>
+                <h3>生物技術</h3>
+                <p>運用生物工程技術改良細胞培養及產物純化流程。</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⚗️</span>
+                <h3>合成製程</h3>
+                <p>設計綠色化學反應路徑，提升製程效率並減少環境衝擊。</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<section class="blog" id="publications">
+    <div class="container">
+        <h2>最新成果</h2>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <h3>新型抗菌分子的發現</h3>
+                <p>團隊運用高通量篩選技術，發現具潛力之新化合物。</p>
+                <a href="#" class="cta-button">詳閱論文</a>
+            </div>
+            <div class="blog-card">
+                <h3>細胞工廠蛋白質產率提升</h3>
+                <p>發表於著名國際期刊，開啟產業應用新方向。</p>
+                <a href="#" class="cta-button">詳閱成果</a>
+            </div>
+            <div class="blog-card">
+                <h3>綠色合成催化劑獲專利</h3>
+                <p>團隊自主開發新催化劑，大幅減能減廢。</p>
+                <a href="#" class="cta-button">方法細節</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 
     <!-- 關於區塊 -->
-    <section class="about" id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>關於 WeedWilly</h2>
-                    <p>WeedWilly 是一個專注於植物研究和自然探索的平台。我們相信每一株植物都有其獨特的價值和美麗，致力於通過科學的方法來理解和欣賞自然世界。</p>
-                    <p>我們的團隊由熱愛自然的研究者組成，運用現代技術和傳統智慧，為大家帶來最真實、最有用的植物知識。</p>
-                    <a href="#contact" class="cta-button">了解更多</a>
-                </div>
-                <div class="about-image">
-                    🌿
-                </div>
+   <section class="about" id="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>團隊介紹</h2>
+                <p>BioPharmLab 由跨領域藥學、生技、生化工程專家組成，融合臨床與產業經驗，致力於從基礎到應用的創新研究。</p>
+                <a href="#contact" class="cta-button">加入我們</a>
+            </div>
+            <div class="about-image">
+                🧪
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
 
     <!-- 聯絡區塊 -->
     <section class="contact" id="contact">

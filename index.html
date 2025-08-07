@@ -16,7 +16,6 @@
 </script>
     
     <script src="https://www.google.com/recaptcha/api.js?render=6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_"></script>
-</script>
 
     <style>
         .grecaptcha-badge { visibility: hidden; }
@@ -72,7 +71,6 @@ body {
     0%, 100% { transform: translateY(0) scale(1); }
     50% { transform: translateY(-22px) scale(1.07);}
 }
-/* 調整其他區塊顏色、陰影，以及 button hover 效果即可 */
 
         /* 導航欄 */
         .navbar {
@@ -244,7 +242,7 @@ body {
             animation: float 6s ease-in-out infinite;
         }
 
-        .:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .molecule:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
         .molecule:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
         .molecule:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
         .molecule:nth-child(4) { top: 40%; right: 30%; animation-delay: 1s; }
@@ -466,16 +464,13 @@ body {
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">BioPharmLab</a>
-<!-- 👆LOGO前可加：⚗️ or 💊 or ⚛️ -->
-<!-- nav-links 如： -->
-<ul class="nav-links">
-    <li><a href="#home">首頁</a></li>
-    <li><a href="#research">研究領域</a></li>
-    <li><a href="#publications">最新成果</a></li>
-    <li><a href="#about">團隊</a></li>
-    <li><a href="#contact">聯絡</a></li>
-</ul>
-
+            <ul class="nav-links">
+                <li><a href="#home">首頁</a></li>
+                <li><a href="#research">研究領域</a></li>
+                <li><a href="#publications">最新成果</a></li>
+                <li><a href="#about">團隊</a></li>
+                <li><a href="#contact">聯絡</a></li>
+            </ul>
             <button class="theme-toggle" id="themeToggle">🌙 深色模式</button>
         </div>
     </nav>
@@ -546,8 +541,6 @@ body {
     </div>
 </section>
 
-
-
     <!-- 關於區塊 -->
    <section class="about" id="about">
     <div class="container">
@@ -564,18 +557,15 @@ body {
     </div>
 </section>
 
-
     <!-- 聯絡區塊 -->
     <section class="contact" id="contact">
         <div class="container">
             <h2>聯絡我們</h2>
-            <form class="contact-form">
-                <input type="text" placeholder="您的姓名" required>
-                <input type="email" placeholder="您的郵箱" required>
-                <textarea rows="5" placeholder="您的訊息" required></textarea>
-
-<input type="hidden" name="recaptcha-token" id="recaptcha-token">
-                
+            <form class="contact-form" id="contactForm">
+                <input type="text" name="name" placeholder="您的姓名" required>
+                <input type="email" name="email" placeholder="您的郵箱" required>
+                <textarea rows="5" name="message" placeholder="您的訊息" required></textarea>
+                <input type="hidden" name="recaptcha-token" id="recaptcha-token">
                 <button type="submit">發送訊息</button>
             </form>
         </div>
@@ -631,19 +621,14 @@ body {
             }
         });
 
-        // 表單提交
-        document.querySelector('.contact-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('感謝您的訊息！我們會盡快回覆您。');
-            e.target.reset();
-        });
-
         // 視差滾動效果
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const parallax = document.querySelector('.bg-animation');
-            const speed = scrolled * 0.5;
-            parallax.style.transform = `translateY(${speed}px)`;
+            if (parallax) {
+                const speed = scrolled * 0.5;
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
         });
 
         // 卡片懸停效果增強
@@ -674,42 +659,68 @@ body {
         // 當頁面載入完成後啟動打字效果
         setTimeout(() => {
             const heroTitle = document.querySelector('.hero h1');
-            const originalText = heroTitle.textContent;
-            typeWriter(heroTitle, originalText, 150);
+            if (heroTitle) {
+                const originalText = heroTitle.textContent;
+                typeWriter(heroTitle, originalText, 150);
+            }
         }, 1500);
+
+        // 修復後的表單提交處理
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const message = formData.get('message');
+
+            // 檢查必填欄位
+            if (!name || !email || !message) {
+                alert('請填寫所有必填欄位');
+                return;
+            }
+
+            // 執行 reCAPTCHA
+            grecaptcha.ready(() => {
+                grecaptcha.execute('6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_', {action: 'submit'})
+                .then((token) => {
+                    // 發送數據到 Google Apps Script
+                    fetch('https://script.google.com/macros/s/AKfycbzX5ftMvyauWTJ7RpRjvsYayqLR-Uk-LY9XZQOs0HTUinnrQxaKZG8PVCQwAfmxXvCh/exec', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            message: message,
+                            token: token
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('感謝您的訊息！我們會盡快回覆您。');
+                            this.reset(); // 清空表單
+                        } else {
+                            throw new Error('伺服器回應錯誤');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('送出失敗，請稍後再試！');
+                    });
+                })
+                .catch(error => {
+                    console.error('reCAPTCHA Error:', error);
+                    alert('驗證失敗，請重新整理頁面再試！');
+                });
+            });
+        });
     </script>
-    
-<script>
-document.querySelector("form").addEventListener("submit", function(e) {
-  e.preventDefault();
 
-  grecaptcha.ready(function() {
-    grecaptcha.execute('6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_', {action: 'submit'}).then(function(token) {
-      const name = document.querySelector("input[name='name']").value;
-      const email = document.querySelector("input[name='email']").value;
-      const message = document.querySelector("textarea[name='message']").value;
-
-      fetch("https://script.google.com/macros/s/AKfycbzX5ftMvyauWTJ7RpRjvsYayqLR-Uk-LY9XZQOs0HTUinnrQxaKZG8PVCQwAfmxXvCh/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message, token })
-      }).then(res => {
-        alert("訊息已送出！");
-      }).catch(err => {
-        alert("送出失敗，請稍後再試！");
-        console.error(err);
-      });
-    });
-  });
-});
-</script>
-
-
-    
-<p style="font-size: 0.8rem; text-align: center; opacity: 0.6;">
-本網站使用 Google reCAPTCHA 保護安全，並遵守 <a href="https://policies.google.com/privacy">隱私權政策</a> 與 <a href="https://policies.google.com/terms">使用條款</a>。
-</p>
-
+    <p style="font-size: 0.8rem; text-align: center; opacity: 0.6; padding: 20px;">
+        本網站使用 Google reCAPTCHA 保護安全，並遵守 <a href="https://policies.google.com/privacy">隱私權政策</a> 與 <a href="https://policies.google.com/terms">使用條款</a>。
+    </p>
     
 </body>
 </html>

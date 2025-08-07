@@ -15,7 +15,8 @@
   gtag('config', 'G-2PBJC013DH');
 </script>
     
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_"></script>
+</script>
 
     <style>
         * {
@@ -677,5 +678,21 @@ body {
             typeWriter(heroTitle, originalText, 150);
         }, 1500);
     </script>
+    
+<script>
+  grecaptcha.ready(function() {
+    grecaptcha.execute('6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_', {action: 'homepage'}).then(function(token) {
+      console.log("reCAPTCHA token:", token);
+      // 如果你有表單，可以把 token 塞進 hidden input
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'recaptcha-token';
+      input.value = token;
+      document.querySelector('form')?.appendChild(input);
+    });
+  });
+</script>
+
+    
 </body>
 </html>

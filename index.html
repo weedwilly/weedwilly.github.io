@@ -680,39 +680,30 @@ body {
     </script>
     
 <script>
-  grecaptcha.ready(function() {
-    grecaptcha.execute('6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_', {action: 'homepage'}).then(function(token) {
-      console.log("reCAPTCHA token:", token);
-      // 如果你有表單，可以把 token 塞進 hidden input
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'recaptcha-token';
-      input.value = token;
-      document.querySelector('form')?.appendChild(input);
-    });
-  });
-</script>
-<script>
 document.querySelector("form").addEventListener("submit", function(e) {
   e.preventDefault();
 
   grecaptcha.ready(function() {
-    grecaptcha.execute('你的網站金鑰', {action: 'submit'}).then(function(token) {
+    grecaptcha.execute('6Le2Rp0rAAAAACjw5A_-8rn79LxZJgsvVIfV8NT_', {action: 'submit'}).then(function(token) {
       const name = document.querySelector("input[name='name']").value;
       const email = document.querySelector("input[name='email']").value;
       const message = document.querySelector("textarea[name='message']").value;
 
       fetch("https://script.google.com/macros/s/AKfycbzX5ftMvyauWTJ7RpRjvsYayqLR-Uk-LY9XZQOs0HTUinnrQxaKZG8PVCQwAfmxXvCh/exec", {
         method: "POST",
-        body: JSON.stringify({ name, email, message, token }),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message, token })
       }).then(res => {
         alert("訊息已送出！");
+      }).catch(err => {
+        alert("送出失敗，請稍後再試！");
+        console.error(err);
       });
     });
   });
 });
 </script>
+
 
     
 <p style="font-size: 0.8rem; text-align: center; opacity: 0.6;">

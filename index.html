@@ -692,7 +692,29 @@ body {
     });
   });
 </script>
+<script>
+document.querySelector("form").addEventListener("submit", function(e) {
+  e.preventDefault();
 
+  grecaptcha.ready(function() {
+    grecaptcha.execute('你的網站金鑰', {action: 'submit'}).then(function(token) {
+      const name = document.querySelector("input[name='name']").value;
+      const email = document.querySelector("input[name='email']").value;
+      const message = document.querySelector("textarea[name='message']").value;
+
+      fetch("https://script.google.com/macros/s/AKfycbzX5ftMvyauWTJ7RpRjvsYayqLR-Uk-LY9XZQOs0HTUinnrQxaKZG8PVCQwAfmxXvCh/exec", {
+        method: "POST",
+        body: JSON.stringify({ name, email, message, token }),
+        headers: { "Content-Type": "application/json" }
+      }).then(res => {
+        alert("訊息已送出！");
+      });
+    });
+  });
+});
+</script>
+
+    
 <p style="font-size: 0.8rem; text-align: center; opacity: 0.6;">
 本網站使用 Google reCAPTCHA 保護安全，並遵守 <a href="https://policies.google.com/privacy">隱私權政策</a> 與 <a href="https://policies.google.com/terms">使用條款</a>。
 </p>

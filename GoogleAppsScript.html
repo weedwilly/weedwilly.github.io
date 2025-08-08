@@ -198,7 +198,7 @@
   let data = {};
 
   try {
-  // 嘗試解析 JSON 格式
+    // 嘗試解析 JSON 格式
     data = JSON.parse(e.postData.contents);
   } catch (err) {
     // 如果解析失敗，改用 URLSearchParams 格式
@@ -208,26 +208,29 @@
       message: e.parameter.message || '',
       token: e.parameter.token || ''
     };
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // 如果是第一次使用，添加標題
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['時間', '姓名', '郵箱', '訊息', 'Token']);
-    }
-    
-    // 添加資料
-    sheet.appendRow([
-      new Date(),
-      data.name || '',
-      data.email || '',
-      data.message || '',
-      data.token || ''
-    ]);
-    
-    return ContentService
-      .createTextOutput(JSON.stringify({success: true}))
-      .setMimeType(ContentService.MimeType.JSON);
-      
+  }
+
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // 如果是第一次使用，添加標題
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['時間', '姓名', '郵箱', '訊息', 'Token']);
+  }
+
+  // 添加資料
+  sheet.appendRow([
+    new Date(),
+    data.name || '',
+    data.email || '',
+    data.message || '',
+    data.token || ''
+  ]);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ success: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
   } catch (error) {
     console.error('錯誤:', error);
     return ContentService

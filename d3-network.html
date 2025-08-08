@@ -100,7 +100,21 @@ const node = svg.selectAll("circle")
   .attr("r", 16)
   .attr("fill", d => colorScale(linkCount[d.id] || 0))
   .attr("cx", d => d.x)
-  .attr("cy", d => d.y);
+  .attr("cy", d => d.y)
+  .on("mouseover", function(event, d) {
+    const count = linkCount[d.id] || 0;
+    tooltip.style("opacity", 1)
+           .html(`Letter: ${d.id}<br>Connections: ${count}`)
+           .style("left", (event.pageX + 10) + "px")
+           .style("top", (event.pageY - 20) + "px");
+
+    d3.select(this).attr("stroke", "#333").attr("stroke-width", 3);
+  })
+  .on("mouseout", function() {
+    tooltip.style("opacity", 0);
+    d3.select(this).attr("stroke", null);
+  });
+
 
 // 加上文字標籤（居中在圓內）
 svg.selectAll("text")

@@ -1,5 +1,5 @@
 # weedwilly.github.io
-
+<!--
 The network plot I wanna draw ⬇️  
 
 https://www.bmj.com/content/389/bmj-2024-081165
@@ -9,7 +9,7 @@ The website code I wanna paste ⬇️
 https://codepen.io/akm2/pen/AGgarW
 
 The readme code I wanna learn ⬇️
-
+-->
 <p align="center">
 <img src="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/cat-typing.gif" alt="Typing Cat" width="200">
 </p>

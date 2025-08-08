@@ -11,7 +11,7 @@ https://codepen.io/akm2/pen/AGgarW
 The readme code I wanna learn ⬇️
 
 <div align="center">
-  <a href="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header.svg">
+  <a href="https://weedwilly.github.io">
     <picture>
       <source media="(min-width: 720px)" srcset="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header.svg">
       <img src="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header.svg" width="800" height="400" alt="Click to see my io">

@@ -1,0 +1,35 @@
+<svg width="600" height="400"></svg>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+const svg = d3.select("svg");
+const nodes = [{id: "A"}, {id: "B"}, {id: "C"}];
+const links = [{source: "A", target: "B"}, {source: "B", target: "C"}];
+
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+  .force("charge", d3.forceManyBody())
+  .force("center", d3.forceCenter(300, 200));
+
+const link = svg.selectAll("line")
+  .data(links)
+  .enter().append("line")
+  .attr("stroke", "#999");
+
+const node = svg.selectAll("circle")
+  .data(nodes)
+  .enter().append("circle")
+  .attr("r", 10)
+  .attr("fill", "#69b3a2")
+  .on("mouseover", function(event, d) {
+    link.attr("stroke", l => (l.source.id === d.id || l.target.id === d.id) ? "#f00" : "#ccc");
+  })
+  .on("mouseout", () => link.attr("stroke", "#999"));
+
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+  node
+    .attr("cx", d => d.x).attr("cy", d => d.y);
+});
+</script>

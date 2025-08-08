@@ -78,7 +78,7 @@
   z-index: 0;
 }
 
-				.particles {
+				.brokenglass {
   position: absolute;
   top: 0;
   left: 0;
@@ -89,7 +89,7 @@
   background-size: contain;
   opacity: 0;
   animation: fadeIn 0.3s linear 1.5s forwards ;
-  z-index: 2;
+  z-index: 4;
 }
 
 @keyframes crackFadeIn {
@@ -121,9 +121,11 @@
 				}
 			</style>
 			<div class="container">
-				<div class="particles"></div>
+				<div class="brokenglass"></div>
 				<h1>Black<br/>Mirror</h1>
 			</div>
 		</div>
 	</foreignObject>
 </svg>
+
+<img src="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/brokenglass.png" width="100" />

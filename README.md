@@ -10,6 +10,9 @@ https://codepen.io/akm2/pen/AGgarW
 
 The readme code I wanna learn ⬇️
 
+<img src="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/cat-typing.gif" alt="Typing Cat" width="300">
+
+
 <div align="center">
   <a href="https://weedwilly.github.io/Rickroll.html">
     <picture>

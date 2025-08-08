@@ -441,49 +441,44 @@ async function testPostData() {
     }
 }
 
-        // 完整表單測試
-        document.getElementById('fullTestForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const url = document.getElementById('testUrl').value;
-            const resultDiv = document.getElementById('formResult');
-            
-            if (!url) {
-                resultDiv.innerHTML = '<div class="error">請先在上方輸入 Apps Script 網址！</div>';
-                return;
-            }
-            
-            const formData = new FormData(this);
-            const data = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                message: formData.get('message'),
-                token: 'form_test_' + Date.now()
-            };
-            
-            resultDiv.innerHTML = '<div class="result">完整表單測試中...</div>';
-            
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const responseText = await response.text();
-                console.log('Response:', responseText);
-                
-                if (response.ok) {
-                    resultDiv.innerHTML = `<div class="success">🎉 完整測試成功！<br>回應: ${responseText}<br><strong>請立即檢查 Google Sheets</strong></div>`;
-                } else {
-                    resultDiv.innerHTML = `<div class="error">❌ 完整測試失敗<br>HTTP ${response.status}: ${responseText}</div>`;
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `<div class="error">❌ 測試錯誤: ${error.message}<br><small>建議檢查開發者工具的 Network 和 Console 標籤</small></div>`;
-            }
+       document.getElementById('fullTestForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const url = document.getElementById('testUrl').value;
+    const resultDiv = document.getElementById('formResult');
+
+    if (!url) {
+        resultDiv.innerHTML = '<div class="error">請先在上方輸入 Apps Script 網址！</div>';
+        return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('name', this.name.value);
+    formData.append('email', this.email.value);
+    formData.append('message', this.message.value);
+    formData.append('token', 'form_test_' + Date.now());
+
+    resultDiv.innerHTML = '<div class="result">完整表單測試中...</div>';
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
         });
+
+        const responseText = await response.text();
+        console.log('Response:', responseText);
+
+        if (response.ok) {
+            resultDiv.innerHTML = `<div class="success">🎉 完整測試成功！<br>回應: ${responseText}<br><strong>請立即檢查 Google Sheets</strong></div>`;
+        } else {
+            resultDiv.innerHTML = `<div class="error">❌ 完整測試失敗<br>HTTP ${response.status}: ${responseText}</div>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="error">❌ 測試錯誤: ${error.message}<br><small>建議檢查開發者工具的 Network 和 Console 標籤</small></div>`;
+    }
+});
+
 
         function showDebuggingSteps() {
             const steps = document.getElementById('debugSteps');

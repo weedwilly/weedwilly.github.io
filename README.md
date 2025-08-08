@@ -14,7 +14,7 @@ The readme code I wanna learn ⬇️
   <a href="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header.svg">
     <picture>
       <source media="(min-width: 720px)" srcset="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header.svg">
-      <img src="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header-mobile.svg" width="800" height="400" alt="Click to see the source">
+      <img src="https://raw.githubusercontent.com/weedwilly/weedwilly.github.io/main/header.svg" width="800" height="400" alt="Click to see my io">
     </picture>
   </a>
 </div>

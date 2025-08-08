@@ -93,7 +93,6 @@ const link = svg.selectAll("line")
     d3.select(this).attr("stroke", "#ccc");
   });
 
-// 畫節點（顏色根據連線數量）
 const node = svg.selectAll("circle")
   .data(nodes)
   .enter().append("circle")
@@ -102,19 +101,11 @@ const node = svg.selectAll("circle")
   .attr("cx", d => d.x)
   .attr("cy", d => d.y)
   .on("mouseover", function(event, d) {
-  const count = linkCount[d.id] || 0;
-  tooltip.style("opacity", 1)
-         .html(`Letter: ${d.id}<br>Connections: ${count}`)
-         .style("left", (event.pageX + 10) + "px")
-         .style("top", (event.pageY - 20) + "px");
-
-  // 高亮相關連線，淡化其他
-  link.attr("opacity", l => (l.source === d.id || l.target === d.id) ? 1 : 0.1);
-})
-.on("mouseout", function() {
-  tooltip.style("opacity", 0);
-  link.attr("opacity", 1);
-});
+    const count = linkCount[d.id] || 0;
+    tooltip.style("opacity", 1)
+           .html(`Letter: ${d.id}<br>Connections: ${count}`)
+           .style("left", (event.pageX + 10) + "px")
+           .style("top", (event.pageY - 20) + "px");
 
     d3.select(this).attr("stroke", "#333").attr("stroke-width", 3);
   })

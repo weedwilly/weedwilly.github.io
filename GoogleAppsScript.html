@@ -195,10 +195,19 @@
                 <p>2. 點擊「新增專案」</p>
                 <p>3. 將以下代碼貼入編輯器：</p>
                 <div class="code">function doPost(e) {
+  let data = {};
+
   try {
-    console.log('收到 POST 請求:', e.postData.contents);
-    
-    const data = JSON.parse(e.postData.contents);
+  // 嘗試解析 JSON 格式
+    data = JSON.parse(e.postData.contents);
+  } catch (err) {
+    // 如果解析失敗，改用 URLSearchParams 格式
+    data = {
+      name: e.parameter.name || '',
+      email: e.parameter.email || '',
+      message: e.parameter.message || '',
+      token: e.parameter.token || ''
+    };
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
     // 如果是第一次使用，添加標題

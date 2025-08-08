@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>A–Z Circle Network</title>
+  <title>A–Z Random Network</title>
   <style>
     body { font-family: sans-serif; }
     .tooltip {
@@ -43,22 +43,43 @@ nodes.forEach(d => {
   d.y = centerY + radius * Math.sin(d.angle);
 });
 
-// 建立連線（每個字母連到下一個）
-const links = nodes.map((d, i) => ({
-  source: d.id,
-  target: nodes[(i + 1) % nodes.length].id,
-  info: `${d.id} → ${nodes[(i + 1) % nodes.length].id}`
-}));
+// 建立隨機連線（每個節點連 1–10 個其他節點）
+const links = [];
+nodes.forEach(source => {
+  const targets = [...nodes].filter(n => n.id !== source.id);
+  const count = Math.floor(Math.random() * 10) + 1;
+  const sampled = d3.shuffle(targets).slice(0, count);
+  sampled.forEach(target => {
+    links.push({
+      source: source.id,
+      target: target.id,
+      weight: (Math.random() * 0.9 + 0.1).toFixed(2)
+    });
+  });
+});
 
 // 畫連線
 const link = svg.selectAll("line")
   .data(links)
   .enter().append("line")
   .attr("stroke", "#ccc")
+  .attr("stroke-width", d => d.weight * 2)
   .attr("x1", d => nodes.find(n => n.id === d.source).x)
   .attr("y1", d => nodes.find(n => n.id === d.source).y)
   .attr("x2", d => nodes.find(n => n.id === d.target).x)
-  .attr("y2", d => nodes.find(n => n.id === d.target).y);
+  .attr("y2", d => nodes.find(n => n.id === d.target).y)
+  .on("mouseover", function(event, d) {
+    tooltip.style("opacity", 1)
+           .html(`Weight: ${d.weight}<br>${d.source} → ${d.target}`)
+           .style("left", (event.pageX + 10) + "px")
+           .style("top", (event.pageY - 20) + "px");
+
+    d3.select(this).attr("stroke", "#f00");
+  })
+  .on("mouseout", function() {
+    tooltip.style("opacity", 0);
+    d3.select(this).attr("stroke", "#ccc");
+  });
 
 // 畫節點
 const node = svg.selectAll("circle")
@@ -67,21 +88,7 @@ const node = svg.selectAll("circle")
   .attr("r", 12)
   .attr("fill", "#69b3a2")
   .attr("cx", d => d.x)
-  .attr("cy", d => d.y)
-  .on("mouseover", function(event, d) {
-    tooltip.style("opacity", 1)
-           .html(`Letter: ${d.id}`)
-           .style("left", (event.pageX + 10) + "px")
-           .style("top", (event.pageY - 20) + "px");
-
-    link.attr("stroke", l => (l.source === d.id || l.target === d.id) ? "#f00" : "#eee");
-    node.attr("opacity", n => (n.id === d.id || links.some(l => l.source === d.id || l.target === d.id)) ? 1 : 0.3);
-  })
-  .on("mouseout", () => {
-    tooltip.style("opacity", 0);
-    link.attr("stroke", "#ccc");
-    node.attr("opacity", 1);
-  });
+  .attr("cy", d => d.y);
 
 // 加上文字標籤
 svg.selectAll("text")

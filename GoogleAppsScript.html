@@ -406,44 +406,40 @@ function doGet(e) {
         }
 
         // POST 資料測試
-        async function testPostData() {
-            const url = document.getElementById('testUrl').value;
-            const resultDiv = document.getElementById('postResult');
-            
-            if (!url) {
-                resultDiv.innerHTML = '<div class="error">請先在上方輸入 Apps Script 網址！</div>';
-                return;
-            }
-            
-            const data = {
-                name: document.getElementById('testName').value,
-                email: document.getElementById('testEmail').value,
-                message: document.getElementById('testMessage').value,
-                token: 'test_' + Date.now()
-            };
-            
-            resultDiv.innerHTML = '<div class="result">發送 POST 請求中...</div>';
-            
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const responseText = await response.text();
-                
-                if (response.ok) {
-                    resultDiv.innerHTML = `<div class="success">✅ POST 請求成功！<br>伺服器回應: ${responseText}<br><strong>請檢查您的 Google Sheets 是否有新資料</strong></div>`;
-                } else {
-                    resultDiv.innerHTML = `<div class="error">❌ POST 請求失敗<br>狀態碼: ${response.status}<br>回應: ${responseText}</div>`;
-                }
-            } catch (error) {
-                resultDiv.innerHTML = `<div class="error">❌ POST 請求錯誤: ${error.message}</div>`;
-            }
+async function testPostData() {
+    const url = document.getElementById('testUrl').value;
+    const resultDiv = document.getElementById('postResult');
+
+    if (!url) {
+        resultDiv.innerHTML = '<div class="error">請先在上方輸入 Apps Script 網址！</div>';
+        return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('name', document.getElementById('testName').value);
+    formData.append('email', document.getElementById('testEmail').value);
+    formData.append('message', document.getElementById('testMessage').value);
+    formData.append('token', 'test_' + Date.now());
+
+    resultDiv.innerHTML = '<div class="result">發送 POST 請求中...</div>';
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        const responseText = await response.text();
+
+        if (response.ok) {
+            resultDiv.innerHTML = `<div class="success">✅ POST 請求成功！<br>伺服器回應: ${responseText}<br><strong>請檢查您的 Google Sheets 是否有新資料</strong></div>`;
+        } else {
+            resultDiv.innerHTML = `<div class="error">❌ POST 請求失敗<br>狀態碼: ${response.status}<br>回應: ${responseText}</div>`;
         }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="error">❌ POST 請求錯誤: ${error.message}</div>`;
+    }
+}
 
         // 完整表單測試
         document.getElementById('fullTestForm').addEventListener('submit', async function(e) {

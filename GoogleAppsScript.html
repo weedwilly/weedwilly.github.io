@@ -199,6 +199,7 @@
   let isJson = true;
 
   try {
+    // 嘗試解析 JSON 格式
     data = JSON.parse(e.postData.contents);
   } catch (err) {
     isJson = false;
@@ -220,33 +221,31 @@
     }
   }
 
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['時間', '姓名', '郵箱', '訊息', 'Token']);
-  }
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['時間', '姓名', '郵箱', '訊息', 'Token']);
+    }
 
-  sheet.appendRow([
-    new Date(),
-    data.name || '',
-    data.email || '',
-    data.message || '',
-    data.token || ''
-  ]);
+    sheet.appendRow([
+      new Date(),
+      data.name || '',
+      data.email || '',
+      data.message || '',
+      data.token || ''
+    ]);
 
-  return ContentService
-    .createTextOutput(JSON.stringify({ success: true, format: isJson ? 'json' : 'urlencoded' }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-
-  } catch (error) {
-    console.error('錯誤:', error);
     return ContentService
-      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .createTextOutput(JSON.stringify({ success: true, format: isJson ? 'json' : 'urlencoded' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
 
 function doGet(e) {
   return ContentService.createTextOutput('Apps Script 運作正常！');

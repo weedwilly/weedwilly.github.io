@@ -1,35 +1,101 @@
-<svg width="600" height="400"></svg>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 Network Graph</title>
+  <style>
+    body { font-family: sans-serif; }
+    .tooltip {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 6px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .node:hover { cursor: pointer; }
+  </style>
+</head>
+<body>
+<svg width="800" height="600"></svg>
+<div class="tooltip" id="tooltip"></div>
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
+const nodes = [
+  { id: "A", group: 1 },
+  { id: "B", group: 1 },
+  { id: "C", group: 2 },
+  { id: "D", group: 2 },
+];
+
+const links = [
+  { source: "A", target: "B", info: "A ↔ B: 5 studies" },
+  { source: "B", target: "C", info: "B ↔ C: 3 studies" },
+  { source: "C", target: "D", info: "C ↔ D: 7 studies" },
+];
+
 const svg = d3.select("svg");
-const nodes = [{id: "A"}, {id: "B"}, {id: "C"}];
-const links = [{source: "A", target: "B"}, {source: "B", target: "C"}];
+const width = +svg.attr("width");
+const height = +svg.attr("height");
+const tooltip = d3.select("#tooltip");
 
 const simulation = d3.forceSimulation(nodes)
-  .force("link", d3.forceLink(links).id(d => d.id).distance(100))
-  .force("charge", d3.forceManyBody())
-  .force("center", d3.forceCenter(300, 200));
+  .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+  .force("charge", d3.forceManyBody().strength(-300))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .force("collide", d3.forceCollide(50));
 
 const link = svg.selectAll("line")
   .data(links)
   .enter().append("line")
-  .attr("stroke", "#999");
+  .attr("stroke", "#999")
+  .attr("stroke-width", 2);
 
 const node = svg.selectAll("circle")
   .data(nodes)
   .enter().append("circle")
-  .attr("r", 10)
-  .attr("fill", "#69b3a2")
+  .attr("r", 20)
+  .attr("fill", d => d.group === 1 ? "#69b3a2" : "#ff7f0e")
+  .attr("class", "node")
   .on("mouseover", function(event, d) {
+    tooltip.style("opacity", 1)
+           .html(`Node: ${d.id}`)
+           .style("left", (event.pageX + 10) + "px")
+           .style("top", (event.pageY - 20) + "px");
+
     link.attr("stroke", l => (l.source.id === d.id || l.target.id === d.id) ? "#f00" : "#ccc");
+    node.attr("opacity", n => (n.id === d.id || links.some(l => l.source.id === d.id || l.target.id === d.id)) ? 1 : 0.3);
   })
-  .on("mouseout", () => link.attr("stroke", "#999"));
+  .on("mouseout", () => {
+    tooltip.style("opacity", 0);
+    link.attr("stroke", "#999");
+    node.attr("opacity", 1);
+  })
+  .on("click", function(event, d) {
+    alert(`You clicked on node ${d.id}`);
+  });
+
+const label = svg.selectAll("text")
+  .data(nodes)
+  .enter().append("text")
+  .text(d => d.id)
+  .attr("font-size", "14px")
+  .attr("text-anchor", "middle")
+  .attr("dy", 5);
 
 simulation.on("tick", () => {
   link
     .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
     .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+
   node
     .attr("cx", d => d.x).attr("cy", d => d.y);
+
+  label
+    .attr("x", d => d.x).attr("y", d => d.y);
 });
 </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<h2>XSS 測試</h2>
+<input id="xssInput" placeholder="輸入可能的 XSS 攻擊碼">
+<button onclick="runXSS()">送出</button>
+<div id="xssOutput"></div>
+
+<script>
+  function runXSS() {
+    const input = document.getElementById('xssInput').value;
+    document.getElementById('xssOutput').innerHTML = input; // 故意使用 innerHTML
+  }
+</script>
+
+<h2>Clickjacking 測試</h2>
+<iframe src="https://weedwilly.github.io/" width="300" height="200"></iframe>
+
+<h2>Input Flooding 測試</h2>
+<button onclick="flood()">大量送出</button>
+
+<script>
+  function flood() {
+    for (let i = 0; i < 100; i++) {
+      fetch('https://script.google.com/macros/s/你的AppsScript網址/exec', {
+        method: 'POST',
+        body: new URLSearchParams({ msg: 'flood ' + i })
+      });
+    }
+  }
+</script>
+
+<h2>CORS 測試</h2>
+<button onclick="testCORS()">測試跨網域請求</button>
+<pre id="corsResult"></pre>
+
+<script>
+  async function testCORS() {
+    try {
+      const res = await fetch('https://你的Supabase或AppsScript網址', {
+        method: 'GET',
+        mode: 'cors'
+      });
+      const text = await res.text();
+      document.getElementById('corsResult').textContent = text;
+    } catch (err) {
+      document.getElementById('corsResult').textContent = '錯誤：' + err;
+    }
+  }
+</script>
+
+<h2>CSP 測試</h2>
+<p>請使用瀏覽器 DevTools 查看是否有 Content-Security-Policy headers。</p>
+

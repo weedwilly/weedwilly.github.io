@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>A–Z Random Network</title>
+  <title>A–Z Weighted Network</title>
   <style>
     body { font-family: sans-serif; }
     .tooltip {
@@ -46,7 +46,7 @@ nodes.forEach(d => {
 // 建立隨機連線（每個節點連 1–10 個其他節點）
 const links = [];
 nodes.forEach(source => {
-  const targets = [...nodes].filter(n => n.id !== source.id);
+  const targets = nodes.filter(n => n.id !== source.id);
   const count = Math.floor(Math.random() * 10) + 1;
   const sampled = d3.shuffle(targets).slice(0, count);
   sampled.forEach(target => {
@@ -57,6 +57,18 @@ nodes.forEach(source => {
     });
   });
 });
+
+// 計算每個節點的連線數量
+const linkCount = {};
+links.forEach(link => {
+  linkCount[link.source] = (linkCount[link.source] || 0) + 1;
+  linkCount[link.target] = (linkCount[link.target] || 0) + 1;
+});
+
+// 顏色比例尺：連線越多顏色越深
+const colorScale = d3.scaleSequential()
+  .domain([0, d3.max(Object.values(linkCount))])
+  .interpolator(d3.interpolateBlues);
 
 // 畫連線
 const link = svg.selectAll("line")
@@ -81,24 +93,25 @@ const link = svg.selectAll("line")
     d3.select(this).attr("stroke", "#ccc");
   });
 
-// 畫節點
+// 畫節點（顏色根據連線數量）
 const node = svg.selectAll("circle")
   .data(nodes)
   .enter().append("circle")
-  .attr("r", 12)
-  .attr("fill", "#69b3a2")
+  .attr("r", 16)
+  .attr("fill", d => colorScale(linkCount[d.id] || 0))
   .attr("cx", d => d.x)
   .attr("cy", d => d.y);
 
-// 加上文字標籤
+// 加上文字標籤（居中在圓內）
 svg.selectAll("text")
   .data(nodes)
   .enter().append("text")
   .text(d => d.id)
   .attr("x", d => d.x)
-  .attr("y", d => d.y - 18)
+  .attr("y", d => d.y + 4)
   .attr("text-anchor", "middle")
-  .attr("font-size", "12px");
+  .attr("font-size", "14px")
+  .attr("fill", "#fff");
 </script>
 </body>
 </html>

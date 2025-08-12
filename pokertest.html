@@ -6,10 +6,11 @@
   <style>
     body { font-family: sans-serif; background: #1b1b1b; color: #fff; text-align: center; }
     .table { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-    .player { width: 120px; margin: 10px; padding: 10px; background: #333; border-radius: 8px; }
+    .player { width: 140px; margin: 10px; padding: 10px; background: #333; border-radius: 8px; }
     .card { display: inline-block; width: 40px; height: 60px; margin: 2px; background: #fff; color: #000; border-radius: 6px; line-height: 60px; font-size: 18px; }
     .community { margin: 20px 0; }
     button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+    .info { margin-top: 10px; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -17,6 +18,7 @@
   <div class="community">
     <h2>公共牌</h2>
     <div id="communityCards"></div>
+    <div class="info">獎池：<span id="pot">0</span></div>
   </div>
   <div class="table" id="players"></div>
   <div>
@@ -27,7 +29,7 @@
   <script>
     const suits = ['♠', '♥', '♦', '♣'];
     const ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    let deck = [], stage = 0;
+    let deck = [], stage = 0, pot = 0;
     const playerCount = 4;
     let players = [], communityCards = [];
 
@@ -40,29 +42,52 @@
     function startGame() {
       shuffleDeck();
       stage = 0;
+      pot = 0;
       communityCards = [];
       players = Array.from({length: playerCount}, (_, i) => ({
         name: i === 0 ? '你' : `AI 玩家 ${i}`,
-        cards: [deck.pop(), deck.pop()]
+        cards: [deck.pop(), deck.pop()],
+        chips: 1000,
+        bet: 0,
+        folded: false
       }));
+      blindBet();
       render();
+    }
+
+    function blindBet() {
+      players[1].bet = 10; players[1].chips -= 10;
+      players[2].bet = 20; players[2].chips -= 20;
+      pot = 30;
     }
 
     function nextStage() {
       if (stage === 0) communityCards = [deck.pop(), deck.pop(), deck.pop()];
       else if (stage === 1) communityCards.push(deck.pop());
       else if (stage === 2) communityCards.push(deck.pop());
+      else if (stage === 3) showdown();
       stage++;
       render();
+    }
+
+    function showdown() {
+      let active = players.filter(p => !p.folded);
+      let winner = active[Math.floor(Math.random() * active.length)];
+      winner.chips += pot;
+      alert(`${winner.name} 贏得獎池 ${pot}！`);
+      pot = 0;
     }
 
     function render() {
       document.getElementById('communityCards').innerHTML =
         communityCards.map(c => `<div class="card">${c}</div>`).join('');
+      document.getElementById('pot').textContent = pot;
       document.getElementById('players').innerHTML = players.map(p =>
         `<div class="player">
           <strong>${p.name}</strong><br>
-          ${p.cards.map(c => `<div class="card">${c}</div>`).join('')}
+          ${p.cards.map(c => `<div class="card">${c}</div>`).join('')}<br>
+          籌碼：${p.chips}<br>
+          ${p.folded ? '<em>已棄牌</em>' : `下注：${p.bet}`}
         </div>`
       ).join('');
     }

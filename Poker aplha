@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>德州撲克體驗</title>
+  <style>
+    body { font-family: sans-serif; background: #2e2e2e; color: #fff; text-align: center; }
+    .card { display: inline-block; width: 60px; height: 90px; margin: 5px; background: #fff; color: #000; border-radius: 8px; line-height: 90px; font-size: 24px; }
+    .section { margin: 20px 0; }
+    button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🃏 德州撲克體驗</h1>
+
+  <div class="section">
+    <h2>你的底牌</h2>
+    <div id="holeCards"></div>
+  </div>
+
+  <div class="section">
+    <h2>公共牌</h2>
+    <div id="communityCards"></div>
+  </div>
+
+  <div class="section">
+    <button onclick="deal()">發牌</button>
+    <button onclick="flop()">翻牌</button>
+    <button onclick="turn()">轉牌</button>
+    <button onclick="river()">河牌</button>
+  </div>
+
+  <script>
+    const suits = ['♠', '♥', '♦', '♣'];
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    let deck = [], holeCards = [], communityCards = [];
+
+    function shuffleDeck() {
+      deck = [];
+      for (let s of suits) {
+        for (let r of ranks) {
+          deck.push(r + s);
+        }
+      }
+      deck.sort(() => Math.random() - 0.5);
+    }
+
+    function deal() {
+      shuffleDeck();
+      holeCards = [deck.pop(), deck.pop()];
+      communityCards = [];
+      renderCards();
+    }
+
+    function flop() {
+      communityCards = [deck.pop(), deck.pop(), deck.pop()];
+      renderCards();
+    }
+
+    function turn() {
+      if (communityCards.length === 3) communityCards.push(deck.pop());
+      renderCards();
+    }
+
+    function river() {
+      if (communityCards.length === 4) communityCards.push(deck.pop());
+      renderCards();
+    }
+
+    function renderCards() {
+      document.getElementById('holeCards').innerHTML = holeCards.map(c => `<div class="card">${c}</div>`).join('');
+      document.getElementById('communityCards').innerHTML = communityCards.map(c => `<div class="card">${c}</div>`).join('');
+    }
+  </script>
+</body>
+</html>

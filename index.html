@@ -736,6 +736,32 @@ body {
     <p style="font-size: 0.8rem; text-align: center; opacity: 0.6; padding: 20px;">
         本網站使用 Google reCAPTCHA 保護安全，並遵守 <a href="https://policies.google.com/privacy">隱私權政策</a> 與 <a href="https://policies.google.com/terms">使用條款</a>。
     </p>
-    
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+<script>
+  // 記錄 cookie
+  const cookieName = 'visited';
+  const cookieValue = Cookies.get(cookieName) || 'first-time';
+  Cookies.set(cookieName, 'true', { expires: 7 });
+
+  // 收集環境資訊
+  const data = {
+    cookieName,
+    cookieValue,
+    userLang: navigator.language,
+    platform: navigator.platform,
+    userAgent: navigator.userAgent,
+    screenSize: `${window.screen.width}x${window.screen.height}`,
+    isMobile: /Mobile/i.test(navigator.userAgent),
+    pagePath: window.location.pathname
+  };
+
+  // 傳送到 Apps Script API
+  fetch('https://script.google.com/macros/library/d/1mqzIXSQjaK-Kckq7JzjYTQAmsMiiuBbdqxgIdTBvZFZvXuA0j-lNwM-s/1', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  });
+</script>
+
 </body>
 </html>

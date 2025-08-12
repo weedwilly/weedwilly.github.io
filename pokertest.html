@@ -2,121 +2,70 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>德州撲克遊戲體驗</title>
+  <title>德州撲克遊戲</title>
   <style>
-    body { font-family: sans-serif; background: #2e2e2e; color: #fff; text-align: center; }
-    .card { display: inline-block; width: 60px; height: 90px; margin: 5px; background: #fff; color: #000; border-radius: 8px; line-height: 90px; font-size: 24px; }
-    .section { margin: 20px 0; }
+    body { font-family: sans-serif; background: #1b1b1b; color: #fff; text-align: center; }
+    .table { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .player { width: 120px; margin: 10px; padding: 10px; background: #333; border-radius: 8px; }
+    .card { display: inline-block; width: 40px; height: 60px; margin: 2px; background: #fff; color: #000; border-radius: 6px; line-height: 60px; font-size: 18px; }
+    .community { margin: 20px 0; }
     button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-    .info { font-size: 18px; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h1>🃏 德州撲克遊戲體驗</h1>
-
-  <div class="section">
-    <h2>你的底牌</h2>
-    <div id="playerCards"></div>
-    <div class="info">籌碼：<span id="playerChips">1000</span></div>
-  </div>
-
-  <div class="section">
-    <h2>AI 底牌</h2>
-    <div id="aiCards">❓❓</div>
-    <div class="info">籌碼：<span id="aiChips">1000</span></div>
-  </div>
-
-  <div class="section">
+  <h1>♠ 德州撲克遊戲 ♣</h1>
+  <div class="community">
     <h2>公共牌</h2>
     <div id="communityCards"></div>
   </div>
-
-  <div class="section">
-    <h2>彩池：<span id="pot">0</span></h2>
-    <button onclick="playerAction('call')">跟注</button>
-    <button onclick="playerAction('raise')">加注</button>
-    <button onclick="playerAction('fold')">棄牌</button>
-  </div>
-
-  <div class="section">
-    <div id="result" class="info"></div>
+  <div class="table" id="players"></div>
+  <div>
+    <button onclick="startGame()">開始新局</button>
+    <button onclick="nextStage()">下一階段</button>
   </div>
 
   <script>
     const suits = ['♠', '♥', '♦', '♣'];
-    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-    let deck = [], playerCards = [], aiCards = [], communityCards = [];
-    let playerChips = 1000, aiChips = 1000, pot = 0;
+    const ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    let deck = [], stage = 0;
+    const playerCount = 4;
+    let players = [], communityCards = [];
 
     function shuffleDeck() {
       deck = [];
-      for (let s of suits) {
-        for (let r of ranks) {
-          deck.push(r + s);
-        }
-      }
+      for (let s of suits) for (let r of ranks) deck.push(r + s);
       deck.sort(() => Math.random() - 0.5);
     }
 
     function startGame() {
       shuffleDeck();
-      playerCards = [deck.pop(), deck.pop()];
-      aiCards = [deck.pop(), deck.pop()];
-      communityCards = [deck.pop(), deck.pop(), deck.pop(), deck.pop(), deck.pop()];
-      pot = 0;
-      updateUI();
+      stage = 0;
+      communityCards = [];
+      players = Array.from({length: playerCount}, (_, i) => ({
+        name: i === 0 ? '你' : `AI 玩家 ${i}`,
+        cards: [deck.pop(), deck.pop()]
+      }));
+      render();
     }
 
-    function playerAction(action) {
-      if (action === 'fold') {
-        document.getElementById('result').innerText = '你棄牌了，AI 獲勝！';
-        aiChips += pot;
-      } else {
-        let bet = action === 'raise' ? 100 : 50;
-        if (playerChips < bet) bet = playerChips;
-        playerChips -= bet;
-        pot += bet;
-        aiTurn();
-      }
-      updateUI();
+    function nextStage() {
+      if (stage === 0) communityCards = [deck.pop(), deck.pop(), deck.pop()];
+      else if (stage === 1) communityCards.push(deck.pop());
+      else if (stage === 2) communityCards.push(deck.pop());
+      stage++;
+      render();
     }
 
-    function aiTurn() {
-      let decision = Math.random();
-      if (decision < 0.2) {
-        document.getElementById('result').innerText = 'AI 棄牌了，你獲勝！';
-        playerChips += pot;
-      } else {
-        let bet = decision < 0.6 ? 50 : 100;
-        if (aiChips < bet) bet = aiChips;
-        aiChips -= bet;
-        pot += bet;
-        showdown();
-      }
+    function render() {
+      document.getElementById('communityCards').innerHTML =
+        communityCards.map(c => `<div class="card">${c}</div>`).join('');
+      document.getElementById('players').innerHTML = players.map(p =>
+        `<div class="player">
+          <strong>${p.name}</strong><br>
+          ${p.cards.map(c => `<div class="card">${c}</div>`).join('')}
+        </div>`
+      ).join('');
     }
-
-    function showdown() {
-      document.getElementById('aiCards').innerHTML = aiCards.map(c => `<div class="card">${c}</div>`).join('');
-      let winner = Math.random() < 0.5 ? 'player' : 'ai';
-      if (winner === 'player') {
-        document.getElementById('result').innerText = '你贏了！🎉';
-        playerChips += pot;
-      } else {
-        document.getElementById('result').innerText = 'AI 贏了！🤖';
-        aiChips += pot;
-      }
-      updateUI();
-    }
-
-    function updateUI() {
-      document.getElementById('playerCards').innerHTML = playerCards.map(c => `<div class="card">${c}</div>`).join('');
-      document.getElementById('communityCards').innerHTML = communityCards.map(c => `<div class="card">${c}</div>`).join('');
-      document.getElementById('playerChips').innerText = playerChips;
-      document.getElementById('aiChips').innerText = aiChips;
-      document.getElementById('pot').innerText = pot;
-    }
-
-    startGame();
   </script>
 </body>
 </html>

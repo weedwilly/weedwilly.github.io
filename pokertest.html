@@ -6,10 +6,10 @@
   <style>
     body { font-family: sans-serif; background: #1b1b1b; color: #fff; text-align: center; }
     .table { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-    .player { width: 140px; margin: 10px; padding: 10px; background: #333; border-radius: 8px; }
+    .player { width: 160px; margin: 10px; padding: 10px; background: #333; border-radius: 8px; }
     .card { display: inline-block; width: 40px; height: 60px; margin: 2px; background: #fff; color: #000; border-radius: 6px; line-height: 60px; font-size: 18px; }
     .community { margin: 20px 0; }
-    button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+    button, input { padding: 10px 20px; font-size: 16px; margin: 10px; }
     .info { margin-top: 10px; font-size: 14px; }
   </style>
 </head>
@@ -22,8 +22,10 @@
   </div>
   <div class="table" id="players"></div>
   <div>
-    <button onclick="startGame()">開始新局</button>
+    <input type="number" id="yourBet" value="50" min="10">
+    <button onclick="playerBet()">你下注</button>
     <button onclick="nextStage()">下一階段</button>
+    <button onclick="startGame()">重新開始</button>
   </div>
 
   <script>
@@ -61,11 +63,39 @@
       pot = 30;
     }
 
+    function playerBet() {
+      const amount = parseInt(document.getElementById('yourBet').value);
+      const p = players[0];
+      if (p.chips >= amount && !p.folded) {
+        p.chips -= amount;
+        p.bet += amount;
+        pot += amount;
+        render();
+      }
+    }
+
+    function aiBetting() {
+      for (let i = 1; i < players.length; i++) {
+        const p = players[i];
+        if (!p.folded) {
+          const amount = Math.floor(Math.random() * 50) + 10;
+          if (p.chips >= amount) {
+            p.chips -= amount;
+            p.bet += amount;
+            pot += amount;
+          } else {
+            p.folded = true;
+          }
+        }
+      }
+    }
+
     function nextStage() {
       if (stage === 0) communityCards = [deck.pop(), deck.pop(), deck.pop()];
       else if (stage === 1) communityCards.push(deck.pop());
       else if (stage === 2) communityCards.push(deck.pop());
       else if (stage === 3) showdown();
+      if (stage < 3) aiBetting();
       stage++;
       render();
     }
@@ -91,6 +121,8 @@
         </div>`
       ).join('');
     }
+
+    startGame();
   </script>
 </body>
 </html>

@@ -738,29 +738,32 @@ body {
     </p>
    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 <script>
-  const cookieName = 'visited';
-  const cookieValue = Cookies.get(cookieName) || 'first-time';
-  Cookies.set(cookieName, 'true', { expires: 7 });
+  // 判斷是否第一次造訪
+  const hasVisited = document.cookie.includes('visited=');
+  const cookieValue = hasVisited ? 'true' : 'first-time';
+  // 設定 visited cookie（7 天）
+  document.cookie = 'visited=true; max-age=604800; path=/';
 
   const data = {
-    cookieName,
+    cookieName: 'visited',
     cookieValue,
     userLang: navigator.language,
     platform: navigator.platform,
     userAgent: navigator.userAgent,
-    screenSize: `${window.screen.width}x${window.screen.height}`,
+    screenSize: `${screen.width}x${screen.height}`,
     isMobile: /Mobile/i.test(navigator.userAgent) ? 'Yes' : 'No',
-    pagePath: window.location.pathname
+    pagePath: location.pathname
   };
 
- fetch('https://script.google.com/macros/s/AKfycbwRqreJ0axnyU8tLHVxwncCrPejWDaQVwknuLqjNZOXMjUZCxtTIBPMWbsM8sX6BMEF/exec', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-  body: new URLSearchParams(data).toString()
-})
-.then(res => res.json())
-.then(console.log)
-.catch(console.error);
+  // 關鍵：POST + x-www-form-urlencoded（避免預檢）且 URL 不加任何 ?params
+  fetch('https://script.google.com/macros/s/AKfycbwRqreJ0axnyU8tLHVxwncCrPejWDaQVwknuLqjNZOXMjUZCxtTIBPMWbsM8sX6BMEF/exec', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(data).toString()
+  })
+  .then(res => res.json())
+  .then(console.log)
+  .catch(console.error);
 </script>
 
 </body>

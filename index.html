@@ -753,16 +753,15 @@ body {
     pagePath: window.location.pathname
   };
 
-  fetch('https://script.google.com/macros/s/AKfycbwRqreJ0axnyU8tLHVxwncCrPejWDaQVwknuLqjNZOXMjUZCxtTIBPMWbsM8sX6BMEF/exec', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(console.log)
-  .catch(console.error);
+ fetch('https://script.google.com/macros/s/你的ID/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+  body: new URLSearchParams(data).toString()
+})
+.then(res => res.json())
+.then(console.log)
+.catch(console.error);
 </script>
-
 
 </body>
 </html>

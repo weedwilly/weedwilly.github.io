@@ -763,8 +763,6 @@ body {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(data).toString()
   })
-  .then(res => res.json())
-  .then(console.log)
   .catch(console.error);
 </script>
 

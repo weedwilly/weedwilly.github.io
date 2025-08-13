@@ -755,7 +755,7 @@ body {
 
   const params = new URLSearchParams(data).toString();
 
-  fetch(`https://script.google.com/macros/s/AKfycbwRqreJ0axnyU8tLHVxwncCrPejWDaQVwknuLqjNZOXMjUZCxtTIBPMWbsM8sX6BMEF/exec`)
+  fetch(`https://script.google.com/macros/s/AKfycbwRqreJ0axnyU8tLHVxwncCrPejWDaQVwknuLqjNZOXMjUZCxtTIBPMWbsM8sX6BMEF/exec?${params}`)
     .then(res => res.json())
     .then(console.log)
     .catch(console.error);
